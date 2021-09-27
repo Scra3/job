@@ -11,14 +11,38 @@ class Rental
     (time_price + distance_price).to_i
   end
 
+  def insurance_fee
+    (commission / 2).to_i
+  end
+
+  def assistance_fee
+    # the expected_output and the text statement are different.
+    # it asks '1€/day goes to the roadside assistance' but in the
+    # expected output_file it is 100€/day.
+    driver.count_period * 100
+  end
+
+  def drivy_fee
+    (commission - insurance_fee - assistance_fee).to_i
+  end
+
   def as_json
     {
         id: @id,
-        price: price
+        price: price,
+        commission: {
+            insurance_fee: insurance_fee,
+            assistance_fee: assistance_fee,
+            drivy_fee: drivy_fee
+        }
     }
   end
 
   private
+
+  def commission
+    price * 0.3
+  end
 
   def time_price
     (1..@driver.count_period).map do |day_index|
