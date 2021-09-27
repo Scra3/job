@@ -1,3 +1,27 @@
+# Technical documentation
+
+## Install dependencies
+
+Please install the ruby version mentioned in the `.ruby-version` file.
+
+```bash
+bundle binstubs --all
+```
+
+## run tests
+
+```bash
+rspec
+```
+
+## run project
+
+This command generate the rentals output file in the data directory.
+
+```bash
+ruby main.rb
+```
+
 # Getaround EU Backend Challenge (previously Drivy)
 
 Looking for a job? Check out our [open positions](https://uk.getaround.com.com/jobs).
