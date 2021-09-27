@@ -1,3 +1,5 @@
+require_relative 'payment_action'
+
 class Rental
   attr_reader :id, :driver, :car
 
@@ -9,6 +11,10 @@ class Rental
 
   def price
     (time_price + distance_price).to_i
+  end
+
+  def total_fee
+    insurance_fee + assistance_fee + drivy_fee
   end
 
   def insurance_fee
@@ -29,12 +35,7 @@ class Rental
   def as_json
     {
         id: @id,
-        price: price,
-        commission: {
-            insurance_fee: insurance_fee,
-            assistance_fee: assistance_fee,
-            drivy_fee: drivy_fee
-        }
+        actions: PaymentAction.new(self).as_json,
     }
   end
 
