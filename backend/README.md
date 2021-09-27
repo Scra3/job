@@ -1,3 +1,56 @@
+# Technical documentation
+
+## With Docker
+
+### Install dependencies
+
+```bash
+docker build -t job_test .
+```
+
+### Run tests
+
+```bash
+docker run --rm -it -v $(pwd):/usr/src/app job_test rspec
+```
+
+### Run project
+
+[x] represents the level index.
+
+```bash
+docker run --rm -it -v $(pwd):/usr/src/app job_test /bin/sh -c 'cd level[x] && ruby main.rb'
+```
+
+## Without Docker
+
+### Install dependencies
+
+Please install the ruby version mentioned in the `.ruby-version` file.
+
+Run these commands to install dependencies:
+
+```bash
+bundle install
+bundle binstubs --all
+```
+
+### Run tests
+
+```bash
+rspec
+```
+
+### Run project
+
+This command generate the rentals output file in the data directory.
+
+[x] represents the level index.
+
+```bash
+cd level[x] && ruby main.rb
+```
+
 # Getaround EU Backend Challenge (previously Drivy)
 
 Looking for a job? Check out our [open positions](https://uk.getaround.com.com/jobs).
