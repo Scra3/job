@@ -15,7 +15,7 @@ class PaymentAction
      {
          "who": ACTOR[:owner],
          "type": PAYMENT_TYPE[:credit],
-         "amount": @rental.price - @rental.total_fee,
+         "amount": owner_amount
      },
      {
          "who": ACTOR[:insurance],
@@ -30,8 +30,14 @@ class PaymentAction
      {
          "who": ACTOR[:drivy],
          "type": PAYMENT_TYPE[:credit],
-         "amount": @rental.drivy_fee,
+         "amount": @rental.drivy_fee + @rental.additional_insurance_option_price,
      }
     ]
+  end
+
+  private
+
+  def owner_amount
+    @rental.price_without_options - @rental.total_fee + @rental.gps_option_price + @rental.baby_seat_option_price
   end
 end

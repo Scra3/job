@@ -1,6 +1,8 @@
 require_relative 'payment_action'
 
 class Rental
+  OPTIONS = {gps: 'gps', baby_seat: 'baby_seat', additional_insurance: 'additional_insurance'}
+
   attr_reader :id, :driver, :car
 
   def initialize(id, car, driver)
@@ -10,6 +12,10 @@ class Rental
   end
 
   def price
+    (time_price + distance_price + options_price).to_i
+  end
+
+  def price_without_options
     (time_price + distance_price).to_i
   end
 
@@ -22,9 +28,6 @@ class Rental
   end
 
   def assistance_fee
-    # the expected_output and the text statement are different.
-    # it asks '1€/day goes to the roadside assistance' but in the
-    # expected output_file it is 100€/day.
     driver.count_period * 100
   end
 
@@ -32,17 +35,34 @@ class Rental
     (commission - insurance_fee - assistance_fee).to_i
   end
 
+  def gps_option_price
+   @driver.options.include?(OPTIONS[:gps]) ? 500 * @driver.count_period : 0
+  end
+
+  def baby_seat_option_price
+   @driver.options.include?(OPTIONS[:baby_seat]) ? 200 * @driver.count_period : 0
+  end
+
+  def additional_insurance_option_price
+   @driver.options.include?(OPTIONS[:additional_insurance]) ? 1000 * @driver.count_period : 0
+  end
+
   def as_json
     {
         id: @id,
+        options: @driver.options,
         actions: PaymentAction.new(self).as_json,
     }
   end
 
   private
 
+  def options_price
+    additional_insurance_option_price + baby_seat_option_price + gps_option_price
+  end
+
   def commission
-    price * 0.3
+    price_without_options * 0.3
   end
 
   def time_price

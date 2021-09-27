@@ -52,6 +52,41 @@ RSpec.describe Rental do
         expect(rental.price).to eq expected_price
       end
     end
+
+    context 'price increase with options' do
+      context 'when there are two options for one day' do
+        it "returns the options price for the gps and the baby seat" do
+          driver = Driver.new(Date.today..Date.today, 20, %w[gps baby_seat])
+          price_without_options = car.price_per_day * driver.count_period + car.price_per_km * driver.approximate_distance
+
+          rental = Rental.new(1, car, driver)
+
+          expect(rental.price).to eq(price_without_options + 500 + 200)
+        end
+      end
+
+      context 'when there is only one option for two days period' do
+        it "returns the options price for the gps for all the period" do
+          driver = Driver.new(Date.today..Date.today + 1, 20, %w[gps])
+          price_without_options = car.price_per_day + one_day_reduction + car.price_per_km * driver.approximate_distance
+
+          rental = Rental.new(1, car, driver)
+
+          expect(rental.price).to eq(price_without_options + 500 * 2)
+        end
+      end
+
+      context 'when there are three options for two days period' do
+        it "returns the options price for all for all the period" do
+          driver = Driver.new(Date.today..Date.today + 1, 20, %w[gps baby_seat additional_insurance])
+          price_without_options = car.price_per_day + one_day_reduction + car.price_per_km * driver.approximate_distance
+
+          rental = Rental.new(1, car, driver)
+
+          expect(rental.price).to eq(price_without_options + 500 * 2 + 200 * 2 + 1000 * 2)
+        end
+      end
+    end
   end
 
   describe '#insurance_fee' do
