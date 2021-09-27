@@ -84,14 +84,22 @@ RSpec.describe Rental do
     end
   end
 
+  describe '#total_fee' do
+    it "returns the total fee" do
+      driver = Driver.new(Date.today..Date.today + 1, 20)
+
+      rental = Rental.new(1, car, driver)
+
+      expect(rental.total_fee).to eq(rental.drivy_fee + rental.assistance_fee + rental.insurance_fee)
+    end
+  end
+
   describe '#as_json' do
-    it "returns the price and the id attributes as json data" do
+    it "returns the json contents with action payments" do
       rental = Rental.new(1, car, a_driver)
 
-      expect(rental.as_json).to eq({id: 1, price: rental.price,
-                                    commission: {drivy_fee: rental.drivy_fee,
-                                                 assistance_fee: rental.assistance_fee,
-                                                 insurance_fee: rental.insurance_fee}})
+      expect(rental.as_json[:actions].length).to eq(5)
+      expect(rental.as_json[:id]).to eq(1)
     end
   end
 end
