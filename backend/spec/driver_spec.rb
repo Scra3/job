@@ -13,12 +13,18 @@ RSpec.describe Driver do
 
   describe "#from_json" do
     it "returns a Driver instance from a json content" do
-      json = {"id" => 1, "car_id" => 1, "start_date" => "2017-12-8", "end_date" => "2017-12-10", "distance" => 100}
+      json = {"id" => 1,
+              "car_id" => 1,
+              "start_date" => "2017-12-8",
+              "end_date" => "2017-12-10",
+              "distance" => 100,
+              "options" => ["gps"]
+      }
 
       driver = Driver.from_json json
 
       expect(driver).to have_attributes(period: Date.parse('2017-12-8')..Date.parse('2017-12-10'),
-                                        approximate_distance: 100)
+                                        approximate_distance: 100, options: ['gps'])
     end
 
   end
